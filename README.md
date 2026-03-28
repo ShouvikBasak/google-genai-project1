@@ -85,6 +85,11 @@ The `uvx` command allows to run command line tools published as Python packages 
 - **Update agent.py** - _Refer to the aget.py file for the updates_
     This is used as a reference to build [agent.py](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/5-deploying-agents/deploy-an-adk-agent-to-cloud-run?utm_source=newsletter&utm_medium=sendy#7)
 
+- **Setup IAM permissions**
+`source .env`
+`gcloud iam service-accounts create ${SA_NAME} --display-name="Service Account for project1"`
+
+
 - **Execute Cloud Run command**
 
     ```
