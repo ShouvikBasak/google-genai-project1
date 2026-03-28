@@ -48,7 +48,7 @@ You must build one AI agent that:
     ```
     google-adk==1.14.0
     langchain-community==0.3.27
-    wikipedia==1.4.0
+    lxmltodict
     ```
 - Create python virtual environment: `uv venv --python 3.12`
 - Activate virtual environment: `source .venv/bin/activate`
@@ -159,3 +159,9 @@ A Smarter ﻿**root_agent**: Our root_agent now has a new tool: AgentTool(agent=
 Notice the instruction field is gone from root_agent. Its instructions are now implicitly defined by the tools it has available.
 
 The root_agent has become an orchestrator or a router, whose main job is to understand a user's request and pass it to the correct tool, either the get_fx_rate function or the google_search_agent. This decentralized design is key to building complex, maintainable agent systems.
+
+
+## PubmedQueryRun Tool
+
+`uv pip install langchain-community xmltodict`
+
