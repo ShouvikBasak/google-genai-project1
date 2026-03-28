@@ -1,4 +1,4 @@
-# --- This first block of the agent.py file brings in all the necessary libraries from the ADK and Google Cloud. It also sets up logging and loads the environment variables from the .env file, which is crucial for accessing the model and server URL. ---
+# --- Import libraries ---
 
 import os
 import logging
@@ -10,6 +10,9 @@ from google.adk.agents import SequentialAgent
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools.langchain_tool import LangchainTool
 
+# FutureWarning: Support for google-cloud-storage < 3.0.0 will be removed in a future version of google-cloud-aiplatform. Please upgrade to google-cloud-storage >= 3.0.0.
+from google.cloud.aiplatform.utils import gcs_utils
+
 from langchain_community.tools import WikipediaQueryRun #for testing
 from langchain_community.utilities import WikipediaAPIWrapper #for testing
 
@@ -17,19 +20,20 @@ import google.auth
 import google.auth.transport.requests
 import google.oauth2.id_token
 
-# --- Setup Logging and Environment ---
+# --- Setup logging and load environment variables ---
 
 cloud_logging_client = google.cloud.logging.Client()
 cloud_logging_client.setup_logging()
 
 load_dotenv()
 
-model_name = os.getenv("MODEL")
+# model_name = os.getenv("MODEL") -- This is not working so hardcoded model name below
+model_name = "gemini-2.5-flash"
 
-# --- In this block define the tools ---
+
+# --- Define **Tools** ---
 
 # Greet user and save their prompt
-
 # Python function that writes the visitor's prompt into the shared tool_context.state dictionary. This tool context represents the agent's short-term memory for a single conversation. Data saved to the state by one agent can be read by the next agent in the workflow.
 def add_prompt_to_state(
     tool_context: ToolContext, prompt: str
@@ -39,15 +43,15 @@ def add_prompt_to_state(
     logging.info(f"[State updated] Added to PROMPT: {prompt}")
     return {"status": "success"}
 
-# Configuring the Wikipedia Tool (for testing). It acts as an adapter, allowing our agent to use the pre-built WikipediaQueryRun tool from the LangChain library.
+# Configuring the Wikipedia Tool (for testing). It acts as an adapter, allowing the agent to use the pre-built WikipediaQueryRun tool from the LangChain library.
 wikipedia_tool = LangchainTool(
     tool=WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
 )
 
-# --- In this block define the **Specialist Agents** ---
+# --- Define **Specialist Agents** ---
 
 # Researcher Agent
-# The comprehensive_researcher agent is the "brain" of our operation. It takes the user's prompt from the shared State, examines the Wikipedia Tool, and decides which ones to use to find the answer.
+# The comprehensive_researcher agent is the "brain" of the operation. It takes the user's prompt from the shared State, examines the Wikipedia Tool, and decides which ones to use to find the answer.
 
 comprehensive_researcher = Agent(
     name="comprehensive_researcher",
@@ -94,7 +98,8 @@ response_formatter = Agent(
     { research_data }
     """
 )
-# --- In this block define the **Workflow Agent** ---
+
+# --- Define **Workflow Agent** ---
 
 # Workflow Agent
 #  It's a SequentialAgent, a special type of agent that doesn't think for itself. Its only job is to run a list of sub_agents (the researcher and formatter) in a fixed sequence, automatically passing the shared memory from one to the next. It takes the research request and ensures the two agents we defined above perform their jobs in the correct order: first research, then formatting. This creates a predictable and reliable process for answering a visitor's question.
@@ -108,8 +113,7 @@ tour_guide_workflow = SequentialAgent(
     ]
 )
 
-
-# --- In this block **Assemble the main workflow** ---
+# --- **Assemble the main workflow** ---
 
 # Root Agent
 # The ADK framework uses the root_agent as the starting point for all new conversations. Its primary role is to orchestrate the overall process. It acts as the initial controller, managing the first turn of the conversation.
