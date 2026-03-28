@@ -47,7 +47,7 @@ You must build one AI agent that:
 
 
 ## Errors & Resolutions
-- `google.auth.exceptions.RefreshError: Unexpected response from metadata server: service account info is missing 'email' field.`
+- `google.auth.exceptions.RefreshError: Unexpected response from metadata server: service account info is missing 'email' field.`.  
     To resolve this error the Cloud Shell need to be reauthorized with the google cloud login id. Close the Terminal and open Terminal again from the cloud console. 
 
 - `adk web` opens terminal but agent does not respond. Error in console:
