@@ -45,6 +45,14 @@ You must build one AI agent that:
 - Test the basic agent: `adk run med_assistant` WORKS!!
 - Test the agent on Development Web UI: `adk web --allow_origins="*"` WORKS!!
 
+- Create `requiremets.txt` in the `med_agent` folder
+    ```
+    google-adk==1.14.0
+    langchain-community==0.3.27
+    wikipedia==1.4.0
+    ```
+- Intsall dependencies: `uv pip install -r requirements.txt`
+
 ### Configure Cloud Run for Application Deployment
 Use the `adk deploy cloud_run` command, a convenient tool that automates the entire deployment workflow. This single command packages the code, builds a container image, pushes it to Artifact Registry, and launches the service on Cloud Run, making it accessible on the web.
 
@@ -80,34 +88,44 @@ The `uvx` command allows to run command line tools published as Python packages 
     SA_NAME=project1-cloudrun-service
     SERVICE_ACCOUNT=project1-cloudrun-service@cohort1-project-31032026.iam.gserviceaccount.com
     MODEL="gemini-2.5-flash"
-    ```
+    ```nn
 
-- **Update agent.py** - _Refer to the aget.py file for the updates_
+- **Update agent.py** - _Refer to the agent.py file for the updates_
     This is used as a reference to build [agent.py](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/5-deploying-agents/deploy-an-adk-agent-to-cloud-run?utm_source=newsletter&utm_medium=sendy#7)
 
 - **Setup IAM permissions**
-`source .env`
-`gcloud iam service-accounts create ${SA_NAME} --display-name="Service Account for project1"`
+- Load the variables into your shell session: `source .env`
+- Create a dedicated service account for your Cloud Run service so that it has its own specific permission
+    `gcloud iam service-accounts create ${SA_NAME} --display-name="Service Account for project1"`
+- Grant the "Vertex AI User" role to the service account
+    ```
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/aiplatform.user"
+    ```
 
-
-- **Execute Cloud Run command**
+- **Depoloy the Agent with Cloud Run**
 
     ```
     uvx --from google-adk==1.14.0 \
     adk deploy cloud_run \
     --project=$PROJECT_ID \
     --region=us-central1 \
-    --service_name=my-app-on-cloud \
+    --service_name=med-app-on-cloud \
     --with_ui \
     . \
     -- \
     --labels=genai-project1=project1 \
     --service-account=$SERVICE_ACCOUNT
     ```
+A repository named [cloud-run-source-deploy] in region [us-central1] will be created
 
 Output excerpt:
-Service [my-app-on-cloud] revision [my-app-on-cloud-00001-k8k] has been deployed and is serving 100 percent of traffic.
-Service URL: https://my-app-on-cloud-918201028398.europe-west1.run.app
+```
+Service [med-app-on-cloud] revision [med-app-on-cloud-00001-4vs] has been deployed and is serving 100 percent of traffic.
+Service URL: https://med-app-on-cloud-612889370094.us-central1.run.app
+```
+
 
 
 
