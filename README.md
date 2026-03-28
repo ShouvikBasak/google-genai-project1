@@ -110,7 +110,7 @@ The `uvx` command allows to run command line tools published as Python packages 
     --with_ui \
     . \
     -- \
-    --labels=genai-project1=project1 \
+    --labels=project=genai-project1 \
     --service-account=$SERVICE_ACCOUNT
     ```
 A repository named [cloud-run-source-deploy] in region [us-central1] will be created
@@ -135,6 +135,27 @@ Service URL: https://med-app-on-cloud-612889370094.us-central1.run.app
     ```
     To resolve, run with `adk web --allow_origins="*"`
     
+## Notes
+
+**Reference:** https://codelabs.developers.google.com/devsite/codelabs/build-agents-with-adk-empowering-with-tools#0
+
+A basic agent built with the ADK has a powerful LLM brain, but it also has limitations: it can't access information created after its training date, and it can't interact with external services. It's like a brilliant, book-smart assistant locked in a library with no phone or internet. To make an agent truly useful, we need to give it tools.
+
+Think of tools as giving that AI assistant access to the outside world: a calculator, a web browser, or access to a specific company database. In ADK, a tool is a modular piece of code that allows the agent to perform specific actions like looking up real-time data or calling an external API. Using tools extends its capabilities far beyond simple conversation.
+
+ADK offers three categories of tools:
+
+- **Function Tools:** Custom tools you develop to meet your application's unique requirements, such as predefined functions and agents.
+- **Built-in Tools:** Ready-to-use tools provided by the framework for common operations, like Google Search and Code Execution.
+- **Third-party Tools:** Popular external libraries such as Serper and tools from LangChain and CrewAI.
+To learn more about using Tools with ADK Agents, have a look at the official documentation. In this codelab, we will add tools to transform our simple agent into a capable personal travel assistant. Let's begin!
 
 
+Let's break down the powerful new pattern in the code:
 
+A New Specialist Agent: We've defined a completely new agent, google_search_agent. Note its specific description and that its only tool is google_search. It's a search specialist.
+agent_tool.AgentTool: This is a special wrapper from the ADK. It takes an entire agent (our google_search_agent) and packages it to look and act like a standard tool.
+A Smarter ﻿**root_agent**: Our root_agent now has a new tool: AgentTool(agent=google_search_agent). It doesn't know how to search the web, but it knows it has a tool it can delegate search tasks to.
+Notice the instruction field is gone from root_agent. Its instructions are now implicitly defined by the tools it has available.
+
+The root_agent has become an orchestrator or a router, whose main job is to understand a user's request and pass it to the correct tool, either the get_fx_rate function or the google_search_agent. This decentralized design is key to building complex, maintainable agent systems.
