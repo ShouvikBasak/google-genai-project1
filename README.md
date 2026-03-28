@@ -139,6 +139,9 @@ This Cloud Run URL should get activated whenever it is accessed.
 
 ## Additional Notes
 
+**Langchain Pubmed tool:** https://reference.langchain.com/python/langchain-community/tools/pubmed/tool/PubmedQueryRun#related-docs
+
+
 **Introducing the APIs**
 - **Cloud Run Admin API** (run.googleapis.com) allows you to run frontend and backend services, batch jobs, or websites in a fully managed environment. It handles the infrastructure for deploying and scaling your containerized applications.  
 - **Artifact Registry API** (artifactregistry.googleapis.com) provides a secure, private repository to store your container images. It is the evolution of Container Registry and integrates seamlessly with Cloud Run and Cloud Build.  
