@@ -37,7 +37,7 @@ You must build one AI agent that:
     Output: `Operation "operations/acat.p2-[GUID]" finished successfully.`
     
 - `mkdir med_assistant` & `cd med_assistant` (`med_assistant` is the agent name)
-- Create `requiremets.txt` in the `med_assistant` directory with the following content:
+- Create `requirements.txt` in the `med_assistant` directory with the following content:
     ```
     google-adk==1.14.0
     langchain==0.3.27
