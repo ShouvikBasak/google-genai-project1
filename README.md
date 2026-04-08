@@ -78,7 +78,7 @@ You must build one AI agent that:
 - **Update agent.py** - _Refer to the agent.py file in the agent directory for the updates made_
     - Reference: https://codelabs.developers.google.com/devsite/codelabs/build-agents-with-adk-empowering-with-tools#5
     - Alternate refernce to extend capabilities: https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/5-deploying-agents/deploy-an-adk-agent-to-cloud-run?utm_source=newsletter&utm_medium=sendy#7 (not used yet)
-Update __init__.py
+Create __init__.py
     ```
     from . import agent
     ```
